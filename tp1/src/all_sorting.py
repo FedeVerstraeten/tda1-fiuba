@@ -137,7 +137,7 @@ def randomIntegerArray(n):
   return nlist
 
 
-def analyzeOrderingAlgorithms(arr, i, j):
+def analyzeSortingAlgorithms(arr, i, j):
   arr1 = arr[:]     #hacemos una copia del array
   tStart = time.time()
   heapSort(arr1)
@@ -183,24 +183,69 @@ def analyzeOrderingAlgorithms(arr, i, j):
   print("tLength SelectionSort:", tEnd - tStart)
   print("-------------")
 
+def worstcaseSortingAlgorithms():
+  
+  # Repeated array
+  array = [1] * SIZE_ARRAY
+  for j in [50, 100, 500, 1000, 2000, 3000, 4000, 5000, 7500, SIZE_ARRAY]:
+    slicedArray = array[:j]
+    analyzeSortingAlgorithms(slicedArray,"repeated_array",j)
 
-########################################################################
+  # Array ordered ascending
+  array = [i for i in xrange(SIZE_ARRAY)]
+  for j in [50, 100, 500, 1000, 2000, 3000, 4000, 5000, 7500, SIZE_ARRAY]:
+    slicedArray = array[:j]
+    analyzeSortingAlgorithms(slicedArray,"ascending_array",SIZE_ARRAY)
+  
+  # Array ordered descending
+  array = [(SIZE_ARRAY-1)-i for i in xrange(SIZE_ARRAY)]
+  for j in [50, 100, 500, 1000, 2000, 3000, 4000, 5000, 7500, SIZE_ARRAY]:
+    slicedArray = array[:j]
+    analyzeSortingAlgorithms(slicedArray,"descending_array",SIZE_ARRAY)
 
-def RunPunto1():
-  #nlist = [14, 46, 43, 27, 57, 41, 45, 21, 70]
+def datasetSortingAlgorithms():
+  
+  # Array initialization
   arrays = [0,1,2,3,4,5,6,7,8,9]
-
-  # Inicializacion de los 10 arreglos
   for i in range(0, NUM_ARRAYS):
-      arrays[i] = randomIntegerArray(SIZE_ARRAY)
+    arrays[i] = randomIntegerArray(SIZE_ARRAY)
 
   for i in range(0, NUM_ARRAYS):
     for j in [50, 100, 500, 1000, 2000, 3000, 4000, 5000, 7500, 10000]:
       slicedArray = arrays[i][:j]
-      analyzeOrderingAlgorithms(slicedArray, i, j)
+      analyzeSortingAlgorithms(slicedArray, i, j)
+
+########################################################################
+
+def RunPunto1(mode):
+
+  if mode == "worstcase":
+    worstcaseSortingAlgorithms()
+  elif mode == "dataset":
+    datasetSortingAlgorithms()
+
+
+############################## MAIN ####################################
 
 def main():
-  RunPunto1()
+
+  # Exec options
+  if len(sys.argv) > 1:
+    execMode = sys.argv[1]
+
+    if execMode == "worstcase":
+      print "Analysis of the worst case."
+      RunPunto1("worstcase")
+
+    elif execMode == "dataset":
+      print "Analysis for the data set."
+      RunPunto1("dataset")
+    else:
+      print "Invalid option."
+ 
+  # Default case
+  else:
+    RunPunto1("dataset")
 
 if __name__ == '__main__':
   main()
