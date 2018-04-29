@@ -1,0 +1,85 @@
+# N <- NUM_PLAYERS (200)
+# M <- NUM_TEAMS (20)
+# T <- NUM_PLAYERS_PER_TEAM (10)
+
+# N / M = k
+# 10 Players each Team
+
+def RunGale(): # O(N + N^2*M*T) = O(N^2*M*T)
+
+  while ( ThereAreYetUnassignedPlayers() ): # O(N)
+    
+    for i in range(0, NUM_PLAYERS): # N * O(M*T*N) = O (N^2*M*T) 
+
+      if Players[i].currentlyAssignedToATeam==False:  # O(1)
+    
+        for j in range(0, NUM_TEAMS): # M * O(T*N + T*N) = O(M*T*N)
+
+          if Teams[j].PlayerIsABetterFit(i): # O(T + T*N + N + N + 1) = O(T*N)
+    
+            Teams[j].ReplaceWorstPlayerOrVacancyByOther(i) # O(T*N)
+            break
+
+# ----------------------------------------------------------
+def ThereAreYetUnassignedPlayers(): # O(N)
+  global Players
+  for i in range(0, NUM_PLAYERS):
+    if (Players[i].currentlyAssignedToATeam==False):
+      return True
+  return False
+
+# ----------------------------------------------------------
+def PlayerIsABetterFit(self, player): # O(T + T*N + N + N + 1) = O(T*N)
+    if self.TeamHasRoomAvailable(): # O(T)
+      return True
+
+    worstPlayer = self.GetTheWorstPlayerInCurrentTeam() # O(T*N)
+    worstPlayerRank = self.GetPlayerRelativeRank(worstPlayer) # O(N)
+
+    proposedPlayerRank = self.GetPlayerRelativeRank(player) # O(N)
+
+    if (proposedPlayerRank < worstPlayerRank): # O(1)
+      return True # O(1)
+    return False # O(1)
+
+# ----------------------------------------------------------
+def ReplaceWorstPlayerOrVacancyByOther(self, player): # O(T + T + T*N + N + T) = O(T*N)
+    global Players
+    if self.TeamHasRoomAvailable(): # O(T)
+      for i in range(0, NUM_PLAYERS_PER_TEAM): # O(T)
+        if self.CurrentPlayers[i] is None:
+          self.CurrentPlayers[i]=player # O(1)
+          Players[player].currentlyAssignedToATeam = True # O(1)
+          # printers # O(1)
+          return # O(1)
+
+      
+    worstPlayer = self.GetTheWorstPlayerInCurrentTeam() # O(T*N)
+    worstPlayerRank = self.GetPlayerRelativeRank(worstPlayer) # O(N)
+    
+    for i in range(0, NUM_PLAYERS_PER_TEAM): # T * O(1)
+      if self.CurrentPlayers[i]==worstPlayer: # O(1)
+        self.CurrentPlayers[i]=player# O(1)
+        Players[worstPlayer].currentlyAssignedToATeam = False# O(1)
+        Players[player].currentlyAssignedToATeam = True# O(1)
+        # printers # O(1)
+        return # O(1)
+
+# -------------------------------------------------------
+ def GetTheWorstPlayerInCurrentTeam(self): # O(T*N)
+    for i in range(0, NUM_PLAYERS_PER_TEAM): # T * O (N)
+      if self.CurrentPlayers[i] is not None: # O(1)
+        rank = self.GetPlayerRelativeRank(self.CurrentPlayers[i]) # O(N)
+        if (rank > maxrank): # O(1)
+          maxrank = rank # O(1)
+          worstPlayer = self.CurrentPlayers[i] # O(1)
+    return worstPlayer # O(1)
+
+# -------------------------------------------------------
+ def GetPlayerRelativeRank(self, player): # O(N)
+    rank = 1
+    for i in range(0, NUM_PLAYERS): # N * # O(1) = O(N)
+      if str(self.PreferredPlayers[i])==str(player): # O(1)
+        return rank # O(1)
+      rank = rank+1 # O(1)
+    return rank # O(1)
