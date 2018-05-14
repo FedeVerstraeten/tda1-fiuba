@@ -1,5 +1,5 @@
 import string
-from dijkstra import dijkstra
+from Dijkstra import dijkstra
 from nodo import nodo
 from grafoPesado import Grafo
 
