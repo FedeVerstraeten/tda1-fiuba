@@ -13,36 +13,36 @@ class Grafo:
         indice = 1
         for l in fichero:
             campos = l.split(' ')
-            peso = num(campos[1])
+            peso = num(campos[2])
             if indice == 1:
                 self.grafoNodos[indice-1] = nodo(campos[0])
-                self.grafoNodos[indice] = nodo(campos[2])
-                self.grafoNodos[indice].agregarNodoAdyacente(self.grafoNodos[indice-1].nodoIndice,peso)
+                self.grafoNodos[indice] = nodo(campos[1])
+                #self.grafoNodos[indice].agregarNodoAdyacente(self.grafoNodos[indice-1].nodoIndice,peso)
                 self.grafoNodos[indice-1].agregarNodoAdyacente(self.grafoNodos[indice].nodoIndice,peso)
                 indice+=1
             else :
                 nodosExistentes = self.nodosExistentesEncontrados(campos)
                 if len(nodosExistentes) == 0:
                     self.grafoNodos[indice] = nodo(campos[0])
-                    self.grafoNodos[indice+1] = nodo(campos[2])
+                    self.grafoNodos[indice+1] = nodo(campos[1])
                     self.grafoNodos[indice].agregarNodoAdyacente(self.grafoNodos[indice+1].nodoIndice,peso)
-                    self.grafoNodos[indice+1].agregarNodoAdyacente(self.grafoNodos[indice].nodoIndice,peso)
+                    #self.grafoNodos[indice+1].agregarNodoAdyacente(self.grafoNodos[indice].nodoIndice,peso)
                     indice+=2
                 else :
                     if  len(nodosExistentes) == 1:
                         if nodosExistentes[0].nodoIndice == num(campos[0]) :#aca a veces anda y a veces no :/
-                            self.grafoNodos[indice] = nodo(campos[2])
-                            self.grafoNodos[indice].agregarNodoAdyacente(nodosExistentes[0].nodoIndice,peso)
+                            self.grafoNodos[indice] = nodo(campos[1])
+                            #self.grafoNodos[indice].agregarNodoAdyacente(nodosExistentes[0].nodoIndice,peso)
                             nodosExistentes[0].agregarNodoAdyacente(self.grafoNodos[indice].nodoIndice,peso)
                             indice+=1
-                        if nodosExistentes[0].nodoIndice == num(campos[2]):
+                        if nodosExistentes[0].nodoIndice == num(campos[1]):
                             self.grafoNodos[indice] = nodo(campos[0])
                             self.grafoNodos[indice].agregarNodoAdyacente(nodosExistentes[0].nodoIndice,peso)
-                            nodosExistentes[0].agregarNodoAdyacente(self.grafoNodos[indice].nodoIndice,peso)
+                            #nodosExistentes[0].agregarNodoAdyacente(self.grafoNodos[indice].nodoIndice,peso)
                             indice+=1
                     if len(nodosExistentes) == 2:
                         nodosExistentes[0].agregarNodoAdyacente(nodosExistentes[1].nodoIndice,peso)
-                        nodosExistentes[1].agregarNodoAdyacente(nodosExistentes[0].nodoIndice,peso)
+                        #nodosExistentes[1].agregarNodoAdyacente(nodosExistentes[0].nodoIndice,peso)
 
         self.grafoGrado = indice
         print self.grafoGrado
@@ -54,7 +54,7 @@ class Grafo:
         for j in range(len(self.grafoNodos)):
             if  (num(campos[0]) == self.grafoNodos[j].nodoIndice) :
                 nodosExistentes[0] = self.grafoNodos[j]
-            elif   (num(campos[2]) == self.grafoNodos[j].nodoIndice) :
+            elif   (num(campos[1]) == self.grafoNodos[j].nodoIndice) :
                 nodosExistentes[1] = self.grafoNodos[j]
         return nodosExistentes
 
