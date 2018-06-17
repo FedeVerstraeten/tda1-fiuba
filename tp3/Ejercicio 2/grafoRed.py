@@ -76,7 +76,7 @@ class Grafo:
 
 
 
-    def generarDigrafo(self):
+    def generarBigrafo(self):
         self.grafoNodos = {}
         self.grafoGrado = 0
 

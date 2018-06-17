@@ -13,11 +13,11 @@ def EK(grafo, nodoInicial):
     flujoMaximo = 0
 
     cuelloBotella = bottleNeck(grafoAuxiliar)
-    grafoAuxiliar.generarDigrafo()
+    grafoAuxiliar.generarBigrafo()
     grafoAuxiliar.mostrarNodos()
     f_aumenting_path = BFS(grafoAuxiliar, nodoInicialAux)
     f_aumenting_path2 = None
-    
+
     while f_aumenting_path == f_aumenting_path2:
         for nodos in f_aumenting_path:
 
