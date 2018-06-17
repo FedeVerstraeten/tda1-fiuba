@@ -25,3 +25,4 @@ def EdmondsKarp(grafo, nodoInicial):
                     nodosVisitados[i] = key #grafoAuxiliar.grafoNodos[i].nodosAdyacentes.keys()[0]
                     grafoAuxiliar.grafoNodos[key].nodoVisitado = 1
     print 'el corte uno es :',nodosVisitados.keys()
+    return nodosVisitados#cuelloBotella
