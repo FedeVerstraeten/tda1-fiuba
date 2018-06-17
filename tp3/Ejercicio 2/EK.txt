@@ -1,0 +1,14 @@
+initMaxFlow
+
+while there is an augmenting path
+
+  find an augmenting path using BFS
+
+  for each edge u->v in the path
+
+    decrease capacity u->v by bottleneck
+
+    increase capacity v->u by bottleneck
+
+  increase maxflow by bottleneck
+
