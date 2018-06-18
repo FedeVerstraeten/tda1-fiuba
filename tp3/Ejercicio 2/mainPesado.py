@@ -1,6 +1,6 @@
 import string
 from nodo import nodo
-from grafoPesado import Grafo
+from grafoRed import Grafo
 from EK import EK
 
 
