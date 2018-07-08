@@ -352,11 +352,11 @@ function Board_Cleanup() {
     $('#svgOne').find('*').remove();
 }
 
-function Board_Draw(t) {
-    var LADO_CUADRADITO = 10;
+function Board_Draw(turn) {
+    var LADO_CUADRADITO = 20;
 
     var WIDTH_BOARD = NUM_COLUMNAS * LADO_CUADRADITO + 20;
-    var POS_THISBOARD = t * WIDTH_BOARD;
+    var POS_THISBOARD = turn * WIDTH_BOARD;
 
     console.log('WIDTH_BOARD', WIDTH_BOARD);
     console.log('POS_THISBOARD', POS_THISBOARD);
@@ -377,24 +377,43 @@ function Board_Draw(t) {
             rect.setAttributeNS(null, 'y', y);
             rect.setAttributeNS(null, 'height', LADO_CUADRADITO);
             rect.setAttributeNS(null, 'width', LADO_CUADRADITO);
+            rect.setAttribute("stroke", "black");
+            rect.setAttribute("stroke-width", "2");
             rect.setAttributeNS(null, 'fill', 'rgb(' + colorgrid.toString() + ', ' + colorgrid.toString() + ', ' + colorgrid.toString() + ')');
             document.getElementById('svgOne').appendChild(rect);
         }
+
     }
+
+    //Agrego indicacion numero de turno   
+    var txt = document.createElementNS(svgns, 'text');
+    var txtX = POS_THISBOARD + ((NUM_COLUMNAS-1)*LADO_CUADRADITO)/2;
+    var txtY = (NUM_BARCOS+1) * LADO_CUADRADITO;
+
+    txt.setAttributeNS(null, 'x', txtX);
+    txt.setAttributeNS(null, 'y', txtY);
+    txt.setAttributeNS(null,'font-size','15');
+    txt.innerHTML = "Turno " + turn.toString();
+    document.getElementById('svgOne').appendChild(txt);
 
     //dibujamos los barcos:
     for (var j = 0; j < NUM_BARCOS; j++) {
-        var x = POS_THISBOARD + ships[j].column * LADO_CUADRADITO + 3;
-        var y = j * LADO_CUADRADITO + 3;
+        var x = POS_THISBOARD + ships[j].column * LADO_CUADRADITO + 7;
+        var y = j * LADO_CUADRADITO + 7;
 
-        var colorship = ships[j].life * 20;
+        var colorship = ships[j].life * 5 + 30;
 
         var rect = document.createElementNS(svgns, 'rect');
         rect.setAttributeNS(null, 'x', x);
         rect.setAttributeNS(null, 'y', y);
         rect.setAttributeNS(null, 'height', LADO_CUADRADITO / 3);
         rect.setAttributeNS(null, 'width', LADO_CUADRADITO / 3);
-        rect.setAttributeNS(null, 'fill', 'rgb(255,0,' + colorship.toString() + ')');
+        if (ships[j].life > 0) {
+            rect.setAttributeNS(null, 'fill', 'rgb(0,' + colorship.toString() + ',0)');
+        } else {
+            rect.setAttributeNS(null, 'fill', 'rgb(255,0,0)');
+        }
+        
         document.getElementById('svgOne').appendChild(rect);
 
 
