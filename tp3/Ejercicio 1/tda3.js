@@ -63,6 +63,7 @@ function RandomBetween(min, max) {
 //inicializa el array de barcos
 function Ships_Initialize() {
     ships = new Array(NUM_BARCOS);
+    var randomLife = RandomBetween(LIFE_MIN, LIFE_MAX);
     //cargamos los barcos, con una distribución uniforme de vida.
     for (var i = 0; i < NUM_BARCOS; i++) {
         ships[i] = {};
@@ -70,7 +71,8 @@ function Ships_Initialize() {
         ships[i].row = i;
         ships[i].column = 0;
         ships[i].isDead = false;
-        ships[i].life = RandomBetween(LIFE_MIN, LIFE_MAX);
+        ships[i].life = randomLife;
+        ships[i].prevlife = randomLife;
     }
 }
 
@@ -87,6 +89,7 @@ function Ships_AdvanceToTheRight() {
     for (var i = 0; i < NUM_BARCOS; i++) {
         if (!ships[i].isDead) {
             ships[i].column++;
+            ships[i].prevlife = ships[i].life
             if (ships[i].column == NUM_COLUMNAS) {
                 ships[i].column = 0; //la grilla es virtualmente infinita; si me pasé, me teletransporto al comienzo.
             }
@@ -110,6 +113,7 @@ function Turrets_Initialize() {
 //dispara una torreta a una fila (siempre habrá uno y solo un barco en esa fila)
 function Turret_ShootToRow(row) {
     var column = ships[row].column; //obtengo la columna en la cual se encuentra el barco
+    ships[row].prevlife = ships[row].life; //guardo la vida actual del barco como previa al disparo del la torreta
     ships[row].life = ships[row].life - grid[row][column]; //resto a la vida del barco el daño de la grilla de daños
 
     if (ships[row].life <= 0) {
@@ -275,6 +279,7 @@ function Player_PlayOneTurnDynamic() {
             for (var k = GRID_DAMAGE_MAX; k >= 0; k--) {
                 if (grid[i][column] == k) {
                     //atacar!
+                    ships[i].prevlife = ships[i].life;
                     ships[i].life = ships[i].life - grid[i][column];
                     turretsavailable--;
                     if (ships[i].life <= 0) {
@@ -323,6 +328,7 @@ function ParseDefinitions() {
     for (var i = 0; i < defs.length; i++) {
         var res = defs[i].split(" ");
         ships[i].life = parseInt(res[0]);
+        ships[i].prevlife = parseInt(res[0]);
         ships[i].isDead = (ships[i].life <= 0);
         ships[i].column = 0; //cada barco comienza de la columna cero.
         ships[i].maxadvances = null;
@@ -393,6 +399,7 @@ function Board_Draw(turn) {
     txt.setAttributeNS(null, 'x', txtX);
     txt.setAttributeNS(null, 'y', txtY);
     txt.setAttributeNS(null,'font-size','15');
+    txt.setAttributeNS(null,'font-weight','bold');
     txt.innerHTML = "Turno " + turn.toString();
     document.getElementById('svgOne').appendChild(txt);
 
@@ -408,9 +415,17 @@ function Board_Draw(turn) {
         rect.setAttributeNS(null, 'y', y);
         rect.setAttributeNS(null, 'height', LADO_CUADRADITO / 3);
         rect.setAttributeNS(null, 'width', LADO_CUADRADITO / 3);
-        if (ships[j].life > 0) {
-            rect.setAttributeNS(null, 'fill', 'rgb(0,' + colorship.toString() + ',0)');
-        } else {
+        
+        // AMARILLO: barco disparado
+        if (ships[j].life < ships[j].prevlife && !ships[j].isDead) {
+            rect.setAttributeNS(null, 'fill', 'rgb(255,255,0)');
+        } 
+        // VERDE: barco vivo
+        else if (ships[j].life > 0 && !ships[j].isDead) {
+            rect.setAttributeNS(null, 'fill', 'rgb(0,' + colorship.toString() + ',0)'); 
+        }
+        // ROJO: barco muerto
+        else {
             rect.setAttributeNS(null, 'fill', 'rgb(255,0,0)');
         }
         
